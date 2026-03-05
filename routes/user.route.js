@@ -1,5 +1,6 @@
 const userRouter = require('express').Router();
 const {AuthChecker} = require('../middlewares/authMiddleware')
+const { handleValidationResults } = require('../validations/validationResult');
 const {
     userRegistrationController,
     userLoginController,
@@ -10,7 +11,6 @@ const {
     validationUserLogin,
     UpdatePasswordValidation
 } = require('../validations/login_registration');
-const { handleValidationResults } = require('../validations/validationResult');
 
 
 // Create a new user
