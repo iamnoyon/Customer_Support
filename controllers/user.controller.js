@@ -77,8 +77,8 @@ const userLoginController = async (req, res) => {
         }
 
         // generate access token and refresh token
-        const accessToken = accessTokenGenerator({ id: user.email, role: user.role });
-        const refreshToken = refreshTokenGenerator({ id: user.email, role: user.role });
+        const accessToken = accessTokenGenerator({ email: user.email, role: user.role });
+        const refreshToken = refreshTokenGenerator({ email: user.email, role: user.role });
 
         res.cookie('refreshToken', refreshToken, { 
             httpOnly: true, 
@@ -107,8 +107,46 @@ const userLoginController = async (req, res) => {
 }
 
 
+// Update password controller
+const updatePasswordController = async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+    try {
+        const user = await User.findOne({ email: req.user.email });
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: 'User not found',
+            })
+        }
+        // Check if the old password is correct
+        const isPasswordValid = comparePassword(oldPassword, user.password);
+        if (!isPasswordValid) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid old password',
+            })
+        }
+        // Update the password
+        user.password = hashPassword(newPassword);
+        await user.save();
+        
+        return res.status(200).json({
+            success: true,
+            message: 'Password updated successfully',
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Error updating password',
+            error: error.message
+        });
+    }
+}
+
+
 // Export the controller functions
 module.exports = {
     userRegistrationController,
-    userLoginController
+    userLoginController,
+    updatePasswordController
 };

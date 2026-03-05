@@ -63,8 +63,39 @@ const validationUserLogin = [
     .withMessage('Password is required')
 ]
 
+const UpdatePasswordValidation = [
+    body('oldPassword')
+    .matches(/[!@#$%^&*]/)
+    .withMessage('Password must contain at least one special character')
+    .matches(/[0-9]/)
+    .withMessage('Password must contain at least one number')
+    .matches(/[A-Z]/)
+    .withMessage('Password must contain at least one uppercase letter')
+    .matches(/[a-z]/)
+    .withMessage('Password must contain at least one lowercase letter')
+    .isLength({ min: 8 })
+    .withMessage('Password must be at least 8 characters long')
+    .notEmpty()
+    .withMessage('Current password is required'),
+
+    body('newPassword')
+    .matches(/[!@#$%^&*]/)
+    .withMessage('Password must contain at least one special character')
+    .matches(/[0-9]/)
+    .withMessage('Password must contain at least one number')
+    .matches(/[A-Z]/)
+    .withMessage('Password must contain at least one uppercase letter')
+    .matches(/[a-z]/)
+    .withMessage('Password must contain at least one lowercase letter')
+    .isLength({ min: 8 })
+    .withMessage('Password must be at least 8 characters long')
+    .notEmpty()
+    .withMessage('New password is required')
+]
+
 // export the validation middleware
 module.exports = {
     validationUserRegistration,
-    validationUserLogin
+    validationUserLogin,
+    UpdatePasswordValidation
 }
