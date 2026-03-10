@@ -28,8 +28,15 @@ const userSchema = mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['ADMIN', 'INVESTOR', 'MANAGER', 'SUPERVISOR'],
-        default: 'INVESTOR'
+        enum: ['ADMIN', 'INVESTOR', 'MANAGER', 'SUPERVISOR']
+    },
+    profileImage: {
+        type: String,
+        default: ''
+    },
+    isActive: {
+        type: Boolean,
+        default: true
     },
     createdAt: {
         type: Date,
