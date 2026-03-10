@@ -63,9 +63,20 @@ const validationUserLogin = [
     .withMessage('Password is required')
 ]
 
+// forgot password validation
+const validationForgotPassword = [
+    // Validate email
+    body('email')
+    .isEmail()
+    .withMessage('Valid email is required')
+    .notEmpty()
+    .withMessage('Email is required'),
+]
+
 
 // export the validation middleware
 module.exports = {
     validationUserRegistration,
     validationUserLogin,
+    validationForgotPassword
 }

@@ -20,9 +20,14 @@ const verifyToken = (token) => {
     }
 }
 
+const generatePassword = () => {
+    return Math.floor(100000 + Math.random() * 900000);
+}
+
 // export the functions
 module.exports = {
     accessTokenGenerator,
     refreshTokenGenerator,
-    verifyToken
+    verifyToken,
+    generatePassword
 }
