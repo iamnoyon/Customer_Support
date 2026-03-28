@@ -26,7 +26,13 @@ const updateProfileValidation = [
 ]
 
 const UpdatePasswordValidation = [
-    body('oldPassword')
+    body('confirmPassword')
+    .custom((value, { req }) => {
+        if (value !== req.body.newPassword) {
+            throw new Error('New password and confirm password do not match');
+        }
+        return true;
+    })
     .matches(/[!@#$%^&*]/)
     .withMessage('Password must contain at least one special character')
     .matches(/[0-9]/)

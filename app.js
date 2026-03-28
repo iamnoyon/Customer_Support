@@ -3,6 +3,10 @@ const express = require('express');
 const userRouter = require('./routes/user.route');
 const { authRouter } = require('./routes/auth.route');
 const adminRouter = require('./routes/admin.route');
+const supervisorRouter = require('./routes/supervisor.route');
+const commonRouter = require('./routes/common.route');
+const businessRouter = require('./routes/business.route');
+const eligibilityRoute = require('./routes/eligibility.route');
 
 // Create an instance of the Express application
 const app = express();
@@ -15,9 +19,12 @@ app.use('/uploads', express.static('uploads')); // Serve static files from the u
 
 // all routes
 app.use('/api/v1', authRouter);
+app.use('/api/v1', commonRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/admin', adminRouter);
-
+app.use('/api/v1/supervisor', supervisorRouter);
+app.use('/api/v1/business', businessRouter);
+app.use('/api/v1', eligibilityRoute);
 
 // client error handler
 app.use((req, res, next)=>{

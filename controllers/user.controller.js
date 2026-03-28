@@ -4,7 +4,7 @@ const config = require("../config/config");
 
 // Update password controller
 const updatePasswordController = async (req, res) => {
-  const { oldPassword, newPassword } = req.body;
+  const { newPassword, confirmPassword } = req.body;
   try {
     const user = await User.findOne({ email: req.user.email });
     if (!user) {
@@ -13,15 +13,13 @@ const updatePasswordController = async (req, res) => {
         message: "User not found",
       });
     }
-    // Check if the old password is correct
-    const isPasswordValid = comparePassword(oldPassword, user.password);
-    if (!isPasswordValid) {
+    if (newPassword !== confirmPassword) {
       return res.status(400).json({
         success: false,
-        message: "Invalid old password",
+        message: "New password and confirm password do not match",
       });
     }
-    // Update the password
+    // Hash the new password and update the user's password
     user.password = hashPassword(newPassword);
     await user.save();
 

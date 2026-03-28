@@ -45,10 +45,40 @@ const adminUserCreateValidation = [
     .isIn(['ADMIN', 'MANAGER', 'SUPERVISOR'])
     .withMessage('Role must be one of ADMIN, MANAGER, or SUPERVISOR')
     .notEmpty()
-    .withMessage('Role is required')
+    .withMessage('Role is required'),
+
+
+    body('supervisorId')
+    .optional()
+]
+
+
+const sectorAddValidation = [
+    body('sectorName')
+    .isLength({ max: 100 })
+    .withMessage('Sector name must be less than 100 characters long')
+    .isLength({ min: 10 })
+    .withMessage('Sector name must be at least 10 characters long')
+    .notEmpty()
+    .withMessage('Sector name is required'),
+
+    body('description')
+    .isLength({ max: 500 })
+    .withMessage('Description must be less than 500 characters long')
+    .isLength({ min: 20 })
+    .withMessage('Description must be at least 20 characters long')
+    .notEmpty()
+    .withMessage('Description is required'),
+
+    body('minimumInvestment')
+    .isNumeric()
+    .withMessage('Minimum investment must be a number')
+    .notEmpty()
+    .withMessage('Minimum investment is required'),
 ]
 
 // Export the validation middleware
 module.exports = {
-    adminUserCreateValidation
+    adminUserCreateValidation,
+    sectorAddValidation
 };

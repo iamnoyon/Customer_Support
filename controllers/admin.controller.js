@@ -1,4 +1,6 @@
 const User = require('../model/user.model');
+const Sector = require('../model/sector.model');
+const SupervisorAssign = require('../model/supervisorAssign');
 const { v4: uuidv4 } = require('uuid');
 const { hashPassword } = require('../util/hash');
 
@@ -58,7 +60,7 @@ const getAllUsers = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-    const {name, email, phone, password, role} = req.body;
+    const {name, email, phone, password, role, supervisorId} = req.body;
     try {
         const existingUser = await User.findOne({ $or: [{ email: email }, { phone: phone }] });
         if(existingUser){
@@ -78,6 +80,22 @@ const createUser = async (req, res) => {
             updatedBy: req.user.email,
         });
         await newUser.save();
+        
+        // find supervisor by supervisorId and assign the new user to the supervisor
+            if(supervisorId && role === 'MANAGER'){
+                const isAlreadyAssigned = await SupervisorAssign.findOne({ supervisorId: supervisorId});
+                if(isAlreadyAssigned){
+                    isAlreadyAssigned.rmId.push(newUser.id);
+                    await isAlreadyAssigned.save();
+                }else{
+                    const newAssignment = new SupervisorAssign({
+                        supervisorId: supervisorId,
+                        rmId: [newUser.id], 
+                        assignedBy: req.user.email
+                    });
+                    await newAssignment.save();
+                }                 
+            }
         res.status(201).json({
             success: true,
             message: 'User created successfully'
@@ -117,9 +135,72 @@ const deleteUser = async (req, res) => {
 }
 
 
+const getAllSupervisors = async (req, res) => {
+    try {
+        const supervisors = await User.find({ $and: [{ role: 'SUPERVISOR' }, { isActive: true }] });
+        if(supervisors.length === 0){
+            return res.status(404).json({
+                success: false,
+                message: 'No supervisors found'
+            });
+        }
+        const supervisorData = supervisors.map(s => ({
+            id: s.id,
+            name: s.name,
+        }));
+        res.status(200).json({
+            success: true,
+            message: 'Supervisors fetched successfully',
+            data: supervisorData
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching supervisors',
+            error: error.message
+        });
+    }
+}
+
+
+const addBusinessSector = async (req, res) =>{
+    const {sectorName, minimumInvestment, description} = req.body;
+    try {
+        const sector = await Sector.findOne({name: sectorName});
+        if(sector){
+            return res.status(400).json({
+                success: false,
+                message: 'Sector with this name already exists'
+            });
+        }
+        const newSector = new Sector({
+            name: sectorName,
+            desc: description,
+            minIvstment: minimumInvestment
+        });
+        await newSector.save();
+        res.status(201).json({
+            success: true,
+            message: 'Business sector added successfully'
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Error adding business sector',
+            error: error.message
+        });
+    }
+
+}
+
+
 // export default
 module.exports = {
     getAllUsers,
     createUser,
-    deleteUser
+    deleteUser,
+    getAllSupervisors,
+    addBusinessSector
 }

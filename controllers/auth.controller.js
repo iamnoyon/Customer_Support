@@ -83,10 +83,12 @@ const userLoginController = async (req, res) => {
     const accessToken = accessTokenGenerator({
       email: user.email,
       role: user.role,
+      id: user.id,
     });
     const refreshToken = refreshTokenGenerator({
       email: user.email,
       role: user.role,
+      id: user.id,
     });
 
     res.cookie("refreshToken", refreshToken, {
