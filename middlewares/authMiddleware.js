@@ -21,7 +21,6 @@ const AuthChecker = (req, res, next) => {
   next();
 };
 
-
 module.exports = {
   AuthChecker,
 };

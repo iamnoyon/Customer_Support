@@ -83,7 +83,7 @@ const updateProfileController = async (req, res) => {
     findUser.phone = phone || findUser.phone;
     findUser.email = email || findUser.email;
     if (req.file) {
-        const normalizedPath = req.file.path.replace(/\\/g, '/');
+      const normalizedPath = req.file.path.replace(/\\/g, "/");
       findUser.profileImage = `${config.BASE_URL}/${normalizedPath}`;
     }
 

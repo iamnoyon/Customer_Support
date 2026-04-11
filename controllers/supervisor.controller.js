@@ -36,7 +36,40 @@ const getRmList = async (req, res) => {
   }
 };
 
+const getRmDetails = async (req, res) => {
+  const rmId = req.params.rmId; // Get RM ID from request parameters
+  try {
+    const rm = await User.findOne({ id: rmId }); // Fetch RM details (name and email)
+    if (!rm) {
+      return res.status(404).json({
+        success: false,
+        message: "RM not found",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: "RM details retrieved successfully",
+      data: {
+        id: rm.id,
+        name: rm.name,
+        email: rm.email,
+        phone: rm.phone,
+        role: rm.role,
+        profileImage: rm.profileImage,
+        isActive: rm.isActive,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error retrieving RM details",
+      error: error.message,
+    });
+  }
+};
+
 // export the controller functions
 module.exports = {
   getRmList,
+  getRmDetails,
 };

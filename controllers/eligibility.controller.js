@@ -70,13 +70,13 @@ const RMConnectController = async (req, res) => {
 
     const hasAlreadyRM = await RMConnect.findOne({ business_id: business.id });
     if (hasAlreadyRM) {
-        return res.status(400).json({
-            success: false,
-            message: "This business already has an assigned RM",
-            data: {
-                assignedManager: true
-            }
-        })
+      return res.status(400).json({
+        success: false,
+        message: "This business already has an assigned RM",
+        data: {
+          assignedManager: true,
+        },
+      });
     }
 
     if (business && sector && investmentValueEligible) {

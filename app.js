@@ -7,6 +7,7 @@ const supervisorRouter = require('./routes/supervisor.route');
 const commonRouter = require('./routes/common.route');
 const businessRouter = require('./routes/business.route');
 const eligibilityRoute = require('./routes/eligibility.route');
+const InvestorRouter = require('./routes/investor.route');
 
 // Create an instance of the Express application
 const app = express();
@@ -25,6 +26,7 @@ app.use('/api/v1/admin', adminRouter);
 app.use('/api/v1/supervisor', supervisorRouter);
 app.use('/api/v1/business', businessRouter);
 app.use('/api/v1', eligibilityRoute);
+app.use('/api/v1/investor', InvestorRouter);
 
 // client error handler
 app.use((req, res, next)=>{

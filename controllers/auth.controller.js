@@ -1,8 +1,12 @@
 const { v4: uuidv4 } = require("uuid");
 const User = require("../model/user.model");
-const {sendEmail} = require("../util/MailSender")
+const { sendEmail } = require("../util/MailSender");
 const { hashPassword, comparePassword } = require("../util/hash");
-const { accessTokenGenerator, refreshTokenGenerator, generatePassword } = require("../util/auth");
+const {
+  accessTokenGenerator,
+  refreshTokenGenerator,
+  generatePassword,
+} = require("../util/auth");
 
 // Controller function to handle user signup
 const userRegistrationController = async (req, res) => {
@@ -130,19 +134,23 @@ const userForgotPasswordController = async (req, res) => {
     // Here you can implement the logic to generate a password reset token and send it to the user's email
     // For demonstration, we'll just return a success message
     // create a 8 digit random password
-    const newPassword = 'Aa@' + generatePassword();
+    const newPassword = "Aa@" + generatePassword();
     user.password = hashPassword(newPassword);
     await user.save();
 
     // send mail
-    sendEmail(user.email, 'Password Reset', `Your new password is: ${newPassword}`);
+    sendEmail(
+      user.email,
+      "Password Reset",
+      `Your new password is: ${newPassword}`,
+    );
 
     // response send
     return res.status(200).json({
       success: true,
-      message: "Password reset successfully. Please check your email for the new password.",
+      message:
+        "Password reset successfully. Please check your email for the new password.",
     });
-
   } catch (error) {
     return res.status(500).json({
       success: false,
